@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Salidas de Inventario - Calderon System</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+</head>
+
+<body>
+
+    <header class="barra-superior">
+
+        <div class="logo">
+            🏪 Calderon System
+        </div>
+
+        <nav class="menu">
+
+            <a href="index.html">Inicio</a>
+
+            <a href="NVenta.html" class= "activo">Nueva Venta</a>
+
+            <a href="historial.html">Historial de Ventas</a>
+
+            <a href="reportes.html">Reportes</a>
+
+            <a href="inventario.html">Inventario</a>
+
+            <a href="salidas.html" >Salidas</a>
+
+            <a href="recargas.html">Recargas</a>
+            
+            <a href="Entradas.html">Entradas</a>
+        </nav>
+
+    </header>
+
+  <main class="venta-contenido">
+    <section class="venta-encabezado">
+      <div>
+        <h1>Nueva venta</h1>
+        <p>Seleccioná los productos y prepará el detalle de la compra.</p>
+      </div>
+      <div class="venta-etiqueta">Punto de venta</div>
+    </section>
+
+    <div class="venta-distribucion">
+      <section class="catalogo-panel">
+        <div class="panel-titulo catalogo-titulo">
+          <h2><span>▦</span> Catálogo de productos</h2>
+          <span class="moneda">C$ Córdoba</span>
+        </div>
+        <div class="catalogo-cuerpo">
+          <label class="busqueda-productos">
+            <span>⌕</span>
+            <input type="search" placeholder="Buscar producto por nombre..." aria-label="Buscar producto por nombre">
+          </label>
+          <div class="categorias" aria-label="Categorías de productos">
+            <span class="categoria activa">Todos</span>
+            <span class="categoria">Abarrotes</span>
+            <span class="categoria">Aseo personal</span>
+            <span class="categoria">Bebidas</span>
+            <span class="categoria">Galletas</span>
+            <span class="categoria">Lácteos</span>
+            <span class="categoria">Otros</span>
+          </div>
+          <div class="productos-grid">
+            <article class="producto-card destacado">
+              <div class="producto-superior"><h3>Arroz Tío Pelón</h3><span class="stock">88.5 lb</span></div>
+              <span class="producto-tipo">A granel / peso</span>
+              <p>Arroz de consumo diario</p>
+              <div class="producto-pie"><strong>C$ 23.00</strong><button type="button">＋ Agregar</button></div>
+            </article>
+            <article class="producto-card destacado">
+              <div class="producto-superior"><h3>Azúcar LibraRed</h3><span class="stock">97 lb</span></div>
+              <span class="producto-tipo">A granel / peso</span>
+              <p>Azúcar blanca</p>
+              <div class="producto-pie"><strong>C$ 16.00</strong><button type="button">＋ Agregar</button></div>
+            </article>
+            <article class="producto-card">
+              <div class="producto-superior"><h3>Café presto 400 g</h3><span class="stock">23 unid.</span></div>
+              <p>Café instantáneo</p>
+              <div class="producto-pie"><strong>C$ 200.00</strong><button type="button">＋ Agregar</button></div>
+            </article>
+            <article class="producto-card">
+              <div class="producto-superior"><h3>Gaseosa retornable 2 L</h3><span class="stock">23 unid.</span></div>
+              <p>Bebida gaseosa</p>
+              <div class="producto-pie"><strong>C$ 48.00</strong><button type="button">＋ Agregar</button></div>
+            </article>
+            <article class="producto-card">
+              <div class="producto-superior"><h3>Gaseosa cero 500 ml</h3><span class="stock">24 unid.</span></div>
+              <p>Bebida sin azúcar</p>
+              <div class="producto-pie"><strong>C$ 25.00</strong><button type="button">＋ Agregar</button></div>
+            </article>
+            <article class="producto-card">
+              <div class="producto-superior"><h3>Galletas clásicas</h3><span class="stock">40 unid.</span></div>
+              <p>Paquete individual</p>
+              <div class="producto-pie"><strong>C$ 15.00</strong><button type="button">＋ Agregar</button></div>
+            </article>
+            <article class="producto-card">
+              <div class="producto-superior"><h3>Jabón de baño</h3><span class="stock">20 unid.</span></div>
+              <p>Higiene personal</p>
+              <div class="producto-pie"><strong>C$ 32.00</strong><button type="button">＋ Agregar</button></div>
+            </article>
+            <article class="producto-card">
+              <div class="producto-superior"><h3>Leche entera 1 L</h3><span class="stock">18 unid.</span></div>
+              <p>Leche de larga duración</p>
+              <div class="producto-pie"><strong>C$ 55.00</strong><button type="button">＋ Agregar</button></div>
+            </article>
+          </div>
+          <p class="nota-catalogo">Mostrando productos de ejemplo para la vista previa del diseño.</p>
+        </div>
+      </section>
+
+      <aside class="detalle-panel">
+        <div class="panel-titulo detalle-titulo"><h2><span>🛒</span> Detalle de la venta</h2></div>
+        <div class="detalle-cuerpo">
+          <div class="tabla-encabezado"><span>Producto</span><span>Cant.</span><span>Subtotal</span></div>
+          <div class="carrito-vacio">
+            <div class="carrito-icono">🛍</div>
+            <h3>Tu carrito está vacío</h3>
+            <p>Seleccioná un producto del catálogo para comenzar la venta.</p>
+          </div>
+          <div class="detalle-nota"><span>Los productos agregados aparecerán aquí.</span></div>
+          <div class="total-venta"><span>Total a pagar:</span><strong>C$ 0.00</strong></div>
+          <div class="acciones-venta"><button class="btn-vaciar" type="button">Vaciar carrito</button><button class="btn-registrar" type="button">Registrar venta</button></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

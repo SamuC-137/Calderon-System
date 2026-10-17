@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Salidas de Inventario - Calderon System</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+</head>
+
+<body>
+
+    <header class="barra-superior">
+
+        <div class="logo">
+            🏪 Calderon System
+        </div>
+
+        <nav class="menu">
+
+            <a href="index.html">Inicio</a>
+
+            <a href="NVenta.html">Nueva Venta</a>
+
+            <a href="historial.html">Historial de Ventas</a>
+
+            <a href="reportes.html">Reportes</a>
+
+            <a href="inventario.html">Inventario</a>
+
+            <a href="salidas.html" class="activo">Salidas</a>
+
+            <a href="recargas.html">Recargas</a>
+            
+            <a href="Entradas.html">Entradas</a>
+        </nav>
+
+    </header>
+
+
+    <main class="contenido-principal">
+
+        <section class="encabezado-pagina">
+
+            <div>
+
+                <h1>Salidas de inventario</h1>
+
+                <p>
+                    Registra consumo interno, mermas y retiros sin generar una venta.
+                </p>
+
+            </div>
+
+            <div class="etiqueta-stock">
+                ⚠️ Afecta el stock
+            </div>
+
+        </section>
+
+
+<section class="zona-salidas">
+
+    <div class="formulario-salida">
+
+        <h2>Registrar salida</h2>
+
+
+        <div class="campo-salida">
+
+            <label for="producto-salida">
+                Producto
+            </label>
+
+            <select id="producto-salida">
+
+                <option value="">
+                    Selecciona un producto
+                </option>
+
+                <option value="papel-higienico">
+                    Papel Higienico
+                </option>
+
+                <option value="arroz">
+                    Arroz
+                </option>
+
+                <option value="agua">
+                    Agua
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="campo-salida">
+
+            <label for="cantidad-salida">
+                Cantidad
+            </label>
+
+            <input
+                type="number"
+                id="cantidad-salida"
+            >
+
+            <small>
+                Selecciona un producto para ver disponibilidad.
+            </small>
+
+        </div>
+
+
+        <div class="campo-salida">
+
+            <label for="motivo-salida">
+                Motivo
+            </label>
+
+            <select id="motivo-salida">
+
+                <option value="">
+                    Selecciona un motivo
+                </option>
+
+                <option value="consumo-personal">
+                    Consumo personal/familiar
+                </option>
+
+                <option value="uso-interno">
+                    Uso interno
+                </option>
+
+                <option value="merma">
+                    Merma
+                </option>
+
+                <option value="otro">
+                    Otro
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="campo-salida">
+
+            <label for="retirado-por">
+                Retirado por
+            </label>
+
+            <input
+                type="text"
+                id="retirado-por"
+                placeholder="Ej. Administracion (opcional)"
+            >
+
+        </div>
+
+
+        <button class="boton-registrar-salida">
+            📤 Registrar salida
+        </button>
+
+    </div>
+
+
+    <!-- Historial de salidas -->
+
+    <div class="historial-salidas">
+
+        <h2>Historial de salidas</h2>
+
+
+        <div class="tabla-salidas">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>FECHA</th>
+
+                        <th>PRODUCTO</th>
+
+                        <th>CANTIDAD</th>
+
+                        <th>MOTIVO</th>
+
+                        <th>RETIRADO POR</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr>
+
+                        <td>20/09/26 10:30</td>
+
+                        <td>Papel Higienico</td>
+
+                        <td>
+                            <span class="cantidad-salida">
+                                2 Unidades
+                            </span>
+                        </td>
+
+                        <td>
+                            Consumo personal/familiar
+                        </td>
+
+                        <td>—</td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>19/09/26 18:20</td>
+
+                        <td>Arroz</td>
+
+                        <td>
+                            <span class="cantidad-salida">
+                                2 Libras
+                            </span>
+                        </td>
+
+                        <td>
+                            Uso interno
+                        </td>
+
+                        <td>Administracion</td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>19/09/26 15:45</td>
+
+                        <td>Agua</td>
+
+                        <td>
+                            <span class="cantidad-salida">
+                                1 Unidad
+                            </span>
+                        </td>
+
+                        <td>
+                            Consumo personal/familiar
+                        </td>
+
+                        <td>—</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+    </main>
+
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

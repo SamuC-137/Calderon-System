@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Salidas de Inventario - Calderon System</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+</head>
+
+<body>
+
+    <header class="barra-superior">
+
+        <div class="logo">
+            🏪 Calderon System
+        </div>
+
+        <nav class="menu">
+
+            <a href="index.html">Inicio</a>
+
+            <a href="NVenta.html">Nueva Venta</a>
+
+            <a href="historial.html">Historial de Ventas</a>
+
+            <a href="reportes.html" class="activo">Reportes</a>
+
+            <a href="inventario.html">Inventario</a>
+
+            <a href="salidas.html" >Salidas</a>
+
+            <a href="recargas.html">Recargas</a>
+            
+            <a href="Entradas.html">Entradas</a>
+        </nav>
+
+    </header>
+
+    <main class="contenido-principal reportes-principal">
+        <section class="encabezado-reportes">
+            <div>
+                <div class="titulo-con-icono"><span class="icono-titulo">▥</span><h1>Estadísticas comerciales</h1></div>
+                <p>Consulta las ventas, los productos populares y el rendimiento de tu pulpería.</p>
+            </div>
+            <button class="boton-imprimir" type="button">▣ Imprimir reporte</button>
+        </section>
+
+        <section class="reportes-filtros" aria-label="Filtros del reporte">
+            <div class="campo-filtro">
+                <label for="fecha-desde">Fecha inicial</label>
+                <input type="date" id="fecha-desde">
+            </div>
+            <div class="campo-filtro">
+                <label for="fecha-hasta">Fecha final</label>
+                <input type="date" id="fecha-hasta">
+            </div>
+            <div class="acciones-filtros">
+                <button class="boton-filtrar" type="button">⌕ Consultar</button>
+                <button class="boton-limpiar" type="button">↻ Limpiar</button>
+            </div>
+            <p class="mensaje-filtro" id="mensaje-filtro" aria-live="polite">Selecciona un período para consultar los reportes.</p>
+        </section>
+
+        <section class="reportes-resumen" aria-label="Resumen de ventas">
+            <article class="reporte-tarjeta tarjeta-ventas">
+                <div class="tarjeta-reporte-icono">$</div>
+                <div><p class="reporte-etiqueta">Ventas totales</p><p class="reporte-valor">C$ 0.00</p><small>Dinero vendido en el período</small></div>
+            </article>
+            <article class="reporte-tarjeta tarjeta-transacciones">
+                <div class="tarjeta-reporte-icono">▤</div>
+                <div><p class="reporte-etiqueta">Número de ventas</p><p class="reporte-valor">0</p><small>Transacciones realizadas</small></div>
+            </article>
+            <article class="reporte-tarjeta tarjeta-ganancias">
+                <div class="tarjeta-reporte-icono">↗</div>
+                <div><p class="reporte-etiqueta">Ganancia estimada</p><p class="reporte-valor">C$ 0.00</p><small>Ventas menos costo de productos</small></div>
+            </article>
+        </section>
+
+        <section class="reportes-grid">
+            <article class="reportes-panel panel-productos">
+                <div class="reportes-panel-cabecera">
+                    <div class="panel-icono azul">▥</div>
+                    <div><h2>Productos más vendidos</h2><p>Los productos con mayor cantidad de unidades vendidas.</p></div>
+                </div>
+                <div class="grafico-vacio"><div class="grafico-vacio-icono">▥</div><strong>Sin datos para graficar</strong><span>Cuando existan ventas registradas, aquí podrás comparar los productos más vendidos.</span></div>
+            </article>
+            <article class="reportes-panel panel-categorias">
+                <div class="reportes-panel-cabecera">
+                    <div class="panel-icono verde">◔</div>
+                    <div><h2>Ventas por categoría</h2><p>Distribución de ingresos por categoría.</p></div>
+                </div>
+                <div class="grafico-circular-vacio"><div class="grafico-circular-centro"><strong>0%</strong><span>Registrado</span></div></div>
+                <p class="leyenda-vacia"><span></span> Sin datos disponibles</p>
+            </article>
+        </section>
+
+        <section class="reportes-grid reportes-grid-tablas">
+            <article class="reportes-panel tabla-panel">
+                <div class="reportes-panel-cabecera">
+                    <div class="panel-icono dorado">★</div>
+                    <div><h2>Ventas de mayor valor</h2><p>Transacciones con mayor monto total.</p></div>
+                </div>
+                <div class="reportes-tabla-contenedor">
+                    <table class="reportes-tabla">
+                        <thead><tr><th>Factura</th><th>Fecha</th><th>Monto total</th></tr></thead>
+                        <tbody><tr><td colspan="3" class="estado-sin-datos">Todavía no hay ventas registradas.</td></tr></tbody>
+                    </table>
+                </div>
+            </article>
+            <article class="reportes-panel tabla-panel">
+                <div class="reportes-panel-cabecera">
+                    <div class="panel-icono azul">▣</div>
+                    <div><h2>Rendimiento de productos</h2><p>Unidades vendidas e ingresos por producto.</p></div>
+                </div>
+                <div class="reportes-tabla-contenedor">
+                    <table class="reportes-tabla">
+                        <thead><tr><th>Producto</th><th>Unidades</th><th>Ingresos</th></tr></thead>
+                        <tbody><tr><td colspan="3" class="estado-sin-datos">Todavía no hay datos para mostrar.</td></tr></tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sistema de Choco Choco</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+</head>
+
+<body>
+
+    <header class="barra-superior">
+
+        <div class="logo">
+            🏪 Calderon System
+        </div>
+
+        <nav class="menu">
+
+            <a href="index.html">Inicio</a>
+
+            <a href="NVenta.html">Nueva Venta</a>
+
+            <a href="historial.html">Historial de Ventas</a>
+
+            <a href="reportes.html">Reportes</a>
+
+            <a href="inventario.html">Inventario</a>
+
+            <a href="salidas.html">Salidas</a>
+
+            <a href="recargas.html" class="activo">Recargas</a>
+
+            <a href="Entradas.html">Entradas</a>
+
+        </nav>
+
+    </header>
+
+        <main class="contenido-principal">
+
+        <section class="encabezado-pagina">
+
+            <div>
+
+                <h1>Recargas telefonicas</h1>
+
+                <p>Control Separado de las lineas Tigo y Claro.</p>
+
+            </div>
+
+        </section>
+
+        <section class="cuadro-Claro-Tigo">
+
+            <div class="cuadro tigo">
+
+                <p>TIGO - Ganancias de Hoy:<br>C$ 0.00</p>
+
+
+            </div>
+
+            <div class="cuadro claro">
+
+                <p>CLARO - Ganancias de Hoy:<br>C$ 0.00</p>
+
+            </div>
+
+        </section>
+
+<section class="zona-recargas">
+
+    <div class="formulario-recarga">
+
+        <h2>Registrar recarga</h2>
+
+
+        <div class="campo-recarga">
+
+            <label for="operador">Operador</label>
+
+            <select id="operador">
+
+                <option value="tigo">Tigo</option>
+
+                <option value="claro">Claro</option>
+
+            </select>
+
+        </div>
+
+
+        <div class="campo-recarga">
+
+            <label for="origen">Telefono/caja de origen</label>
+
+            <select id="origen">
+
+                <option value="tigo">Telefono Tigo</option>
+
+                <option value="claro">Telefono Claro</option>
+
+            </select>
+
+        </div>
+
+
+        <div class="campo-recarga">
+
+            <label for="numero">Numero recargado</label>
+
+            <input
+                type="text"
+                id="numero"
+                placeholder="Ej. 8888 8888"
+            >
+
+        </div>
+
+
+        <div class="campo-recarga">
+
+            <label for="monto">Monto</label>
+
+            <div class="campo-monto">
+
+                <span>C$</span>
+
+                <input
+                    type="number"
+                    id="monto"
+                    placeholder="0.00"
+                >
+
+            </div>
+
+        </div>
+
+
+        <button class="boton-registrar-recarga">
+            📱 Registrar recarga
+        </button>
+
+    </div>
+
+
+    <div class="ultimas-recargas">
+
+        <h2>Ultimas recargas</h2>
+
+        <div class="tabla-recargas">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>FECHA</th>
+
+                        <th>OPERADOR</th>
+
+                        <th>NUMERO</th>
+
+                        <th>ORIGEN</th>
+
+                        <th>MONTO</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr>
+
+                        <td>20/09/26 05:20</td>
+
+                        <td>
+                            <span class="etiqueta tigo">
+                                Tigo
+                            </span>
+                        </td>
+
+                        <td>88888888</td>
+
+                        <td>Telefono Tigo</td>
+
+                        <td class="monto-recarga">C$ 70.00</td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>19/09/26 18:30</td>
+
+                        <td>
+                            <span class="etiqueta claro">
+                                Claro
+                            </span>
+                        </td>
+
+                        <td>77777777</td>
+
+                        <td>Telefono Claro</td>
+
+                        <td class="monto-recarga">C$ 50.00</td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>19/09/26 15:10</td>
+
+                        <td>
+                            <span class="etiqueta tigo">
+                                Tigo
+                            </span>
+                        </td>
+
+                        <td>88881111</td>
+
+                        <td>Telefono Tigo</td>
+
+                        <td class="monto-recarga">C$ 100.00</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

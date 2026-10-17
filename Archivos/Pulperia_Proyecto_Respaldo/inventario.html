@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Inventario - Calderon System</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+</head>
+
+<body>
+
+    <header class="barra-superior">
+
+        <div class="logo">
+            🏪 Calderon System
+        </div>
+
+        <nav class="menu">
+
+            <a href="index.html">Inicio</a>
+
+            <a href="NVenta.html">Nueva Venta</a>
+
+            <a href="historial.html">Historial de Ventas</a>
+
+            <a href="reportes.html">Reportes</a>
+
+            <a href="inventario.html" class="activo">Inventario</a>
+
+            <a href="salidas.html">Salidas</a>
+
+            <a href="recargas.html">Recargas</a>
+
+            <a href="Entradas.html">Entradas</a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="contenido-principal">
+
+        <section class="encabezado-pagina">
+
+            <div>
+
+                <h1>Inventario</h1>
+
+                <p>20 productos registrados.</p>
+
+            </div>
+
+
+            <a href="#" class="boton-nuevo-producto">
+                + Nuevo producto
+            </a>
+
+        </section>
+
+
+        <section class="inventario-contenedor">
+
+            <div class="busqueda-inventario">
+
+                <div class="icono-busqueda">
+                    🔍
+                </div>
+
+                <input
+                    type="text"
+                    placeholder="Buscar por producto o categoria"
+                >
+
+                <button>
+                    Buscar
+                </button>
+
+            </div>
+
+            <div class="controles-inventario">
+
+                <div class="cantidad-productos">
+                    Mostrando <strong>1-4</strong> de <strong>4</strong> productos
+                </div>
+
+            </div>
+
+            <table class="tabla-inventario">
+
+
+    <thead>
+
+        <tr>
+
+            <th>Producto</th>
+            <th>Categoria</th>
+            <th>Precio</th>
+            <th>Existencia</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+
+        </tr>
+
+    </thead>
+
+
+    <tbody>
+
+        <tr>
+
+            <td>
+                <strong>Arroz rio pelon</strong>
+                <small>Arroz tipo grano azul</small>
+            </td>
+
+            <td>Abarrotes</td>
+
+            <td>
+                C$ 23.00 <span>/ Libra</span>
+            </td>
+
+            <td>
+                <span class="stock-normal">88.5 Libra</span>
+            </td>
+
+            <td>
+                <span class="estado-activo">Activo</span>
+            </td>
+
+            <td class="acciones-producto">
+
+                <button class="boton-editar">
+                    Editar
+                </button>
+
+                <button class="boton-desactivar">
+                    Desactivar
+                </button>
+
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                <strong>Azucar libreada</strong>
+                <small>Sin descripcion</small>
+            </td>
+
+            <td>Abarrotes</td>
+
+            <td>
+                C$ 16.00 <span>/ Libra</span>
+            </td>
+
+            <td>
+                <span class="stock-normal">97 Libra</span>
+            </td>
+
+            <td>
+                <span class="estado-activo">Activo</span>
+            </td>
+
+            <td class="acciones-producto">
+
+                <button class="boton-editar">
+                    Editar
+                </button>
+
+                <button class="boton-desactivar">
+                    Desactivar
+                </button>
+
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                <strong>Cafe presto 400 g</strong>
+                <small>Sin descripcion</small>
+            </td>
+
+            <td>Abarrotes</td>
+
+            <td>
+                C$ 200.00 <span>/ Unidad</span>
+            </td>
+
+            <td>
+                <span class="stock-normal">23 Unidad</span>
+            </td>
+
+            <td>
+                <span class="estado-activo">Activo</span>
+            </td>
+
+            <td class="acciones-producto">
+
+                <button class="boton-editar">
+                    Editar
+                </button>
+
+                <button class="boton-desactivar">
+                    Desactivar
+                </button>
+
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                <strong>Coca Cola retornable 2 Lt</strong>
+                <small>Sin descripcion</small>
+            </td>
+
+            <td>Bebidas</td>
+
+            <td>
+                C$ 48.00 <span>/ Unidad</span>
+            </td>
+
+            <td>
+                <span class="stock-normal">23 Unidad</span>
+            </td>
+
+            <td>
+                <span class="estado-activo">Activo</span>
+            </td>
+
+            <td class="acciones-producto">
+
+                <button class="boton-editar">
+                    Editar
+                </button>
+
+                <button class="boton-desactivar">
+                    Desactivar
+                </button>
+
+            </td>
+
+        </tr>
+
+    </tbody>
+
+</table>
+
+        </div>
+
+                </section>
+
+            </main>
+
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

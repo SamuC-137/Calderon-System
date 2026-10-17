@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Entradas de Inventario - Calderon System</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+</head>
+
+<body>
+
+    <header class="barra-superior">
+
+        <div class="logo">
+            🏪 Calderon System
+        </div>
+
+        <nav class="menu">
+
+            <a href="index.html">Inicio</a>
+
+            <a href="NVenta.html">Nueva Venta</a>
+
+            <a href="historial.html">Historial de Ventas</a>
+
+            <a href="reportes.html">Reportes</a>
+
+            <a href="inventario.html">Inventario</a>
+
+            <a href="salidas.html">Salidas</a>
+
+            <a href="recargas.html">Recargas</a>
+
+            <a href="Entradas.html" class="activo">Entradas</a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="contenido-principal">
+
+        <section class="encabezado-pagina">
+
+            <div>
+
+                <h1>Entradas de inventario</h1>
+
+                <p>
+                    Registra productos obtenidos y devoluciones de clientes sin generar una venta.
+                </p>
+
+            </div>
+
+            <div class="etiqueta-stock-entrada">
+                📦 Incrementa el stock
+            </div>
+
+        </section>
+
+
+        <section class="resumen-entradas">
+
+            <div class="tarjeta-entrada-resumen">
+                <div class="icono-entrada-resumen icono-azul">📥</div>
+                <div>
+                    <span class="etiqueta-resumen-entrada">Entradas registradas</span>
+                    <strong id="total-entradas-contador">3</strong>
+                </div>
+            </div>
+
+            <div class="tarjeta-entrada-resumen">
+                <div class="icono-entrada-resumen icono-verde">📦</div>
+                <div>
+                    <span class="etiqueta-resumen-entrada">Abastecimiento por stock</span>
+                    <strong id="entradas-abastecimiento-contador">2</strong>
+                </div>
+            </div>
+
+            <div class="tarjeta-entrada-resumen">
+                <div class="icono-entrada-resumen icono-celeste">🔄</div>
+                <div>
+                    <span class="etiqueta-resumen-entrada">Devoluciones de clientes</span>
+                    <strong id="entradas-devoluciones-contador">1</strong>
+                </div>
+            </div>
+
+        </section>
+
+
+        <section class="zona-entradas">
+
+            <!-- Panel superior horizontal de registro -->
+            <div class="formulario-entrada" id="form-registro-entrada">
+
+                <div class="cabecera-formulario-entrada">
+                    <h2>📥 Registrar Entrada</h2>
+                    <span class="subtitulo-formulario-entrada">Ingreso directo a existencias</span>
+                </div>
+
+                <div class="cuerpo-formulario-entrada">
+
+                    <div class="campos-entrada-grid">
+
+                        <div class="campo-entrada">
+
+                            <label for="producto-entrada">
+                                Producto
+                            </label>
+
+                            <select id="producto-entrada">
+
+                                <option value="">
+                                    Selecciona un producto
+                                </option>
+
+                                <option value="papel-higienico">
+                                    Papel Higienico
+                                </option>
+
+                                <option value="arroz">
+                                    Arroz
+                                </option>
+
+                                <option value="agua">
+                                    Agua
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="campo-entrada">
+
+                            <label for="cantidad-entrada">
+                                Cantidad a ingresar
+                            </label>
+
+                            <input
+                                type="number"
+                                id="cantidad-entrada"
+                                placeholder="0"
+                            >
+
+                            <small id="ayuda-stock-entrada">
+                                Selecciona un producto para ver disponibilidad.
+                            </small>
+
+                        </div>
+
+
+                        <div class="campo-entrada">
+
+                            <label for="motivo-entrada">
+                                Motivo de entrada
+                            </label>
+
+                            <select id="motivo-entrada">
+
+                                <option value="">
+                                    Selecciona un motivo
+                                </option>
+
+                                <option value="poco-stock">
+                                    Poco Stock / Reabastecimiento
+                                </option>
+
+                                <option value="compra-proveedor">
+                                    Compra a proveedor
+                                </option>
+
+                                <option value="devolucion-cliente">
+                                    Devolucion de cliente
+                                </option>
+
+                                <option value="otro">
+                                    Otro
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="campo-entrada">
+
+                            <label for="ingresado-por">
+                                Ingresado por
+                            </label>
+
+                            <input
+                                type="text"
+                                id="ingresado-por"
+                                placeholder="Ej. Administracion (opcional)"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="pie-formulario-entrada">
+                        <span class="nota-formulario-entrada">Las unidades registradas se sumarán al inventario actual del producto.</span>
+                        <button type="button" id="btn-registrar-entrada" class="boton-registrar-entrada">
+                            📥 Registrar entrada
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Historial de Entradas a ancho completo -->
+            <div class="historial-entradas">
+
+                <div class="cabecera-historial-entradas">
+                    <h2>📋 Historial de Entradas</h2>
+                    <span class="contador-historial-entradas" id="texto-mostrando-entradas">Mostrando últimos 3 ingresos</span>
+                </div>
+
+                <div class="tabla-entradas">
+
+                    <table id="tabla-historial-entradas">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>FECHA</th>
+
+                                <th>PRODUCTO</th>
+
+                                <th>CANTIDAD</th>
+
+                                <th>MOTIVO</th>
+
+                                <th>INGRESADO POR</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="tbody-entradas">
+
+                            <tr>
+
+                                <td>20/09/26 10:30</td>
+
+                                <td><strong>Papel Higienico</strong></td>
+
+                                <td>
+                                    <span class="cantidad-entrada">
+                                        + 2 Unidades
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="motivo-entrada-etiqueta stock">Poco Stock</span>
+                                </td>
+
+                                <td>—</td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>19/09/26 18:20</td>
+
+                                <td><strong>Arroz</strong></td>
+
+                                <td>
+                                    <span class="cantidad-entrada">
+                                        + 2 Libras
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="motivo-entrada-etiqueta stock">Poco Stock</span>
+                                </td>
+
+                                <td>Administracion</td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>19/09/26 15:45</td>
+
+                                <td><strong>Agua</strong></td>
+
+                                <td>
+                                    <span class="cantidad-entrada">
+                                        + 1 Unidad
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="motivo-entrada-etiqueta devolucion">Devolucion de cliente</span>
+                                </td>
+
+                                <td>Yelder</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

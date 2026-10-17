@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Historial de Ventas - Calderon System</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+
+</head>
+
+<body>
+
+    <header class="barra-superior">
+
+        <div class="logo">
+            🏪 Calderon System
+        </div>
+
+        <nav class="menu">
+
+            <a href="index.html">Inicio</a>
+
+            <a href="NVenta.html">Nueva Venta</a>
+
+            <a href="historial.html" class="activo">Historial de Ventas</a>
+
+            <a href="reportes.html">Reportes</a>
+
+            <a href="inventario.html">Inventario</a>
+
+            <a href="salidas.html">Salidas</a>
+
+            <a href="recargas.html">Recargas</a>
+
+            <a href="Entradas.html">Entradas</a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="contenido-principal">
+
+        <section class="encabezado-pagina">
+
+            <div>
+
+                <h1>Historial de Ventas</h1>
+
+                <p>Consulta y localiza cada transaccion.</p>
+
+            </div>
+
+            <a href="#" class="boton-nueva-venta">
+                ➕ Nueva venta
+            </a>
+
+        </section>
+
+        <section class="filtros-historial">
+
+    <div class="campo-filtro">
+
+        <label for="fecha-desde">Desde</label>
+
+        <input type="date" id="fecha-desde">
+
+    </div>
+
+    <div class="campo-filtro">
+
+        <label for="fecha-hasta">Hasta</label>
+
+        <input type="date" id="fecha-hasta">
+
+    </div>
+
+    <div class="campo-filtro campo-busqueda">
+
+        <label for="busqueda">Factura o producto</label>
+
+        <input
+            type="text"
+            id="busqueda"
+            placeholder="# venta o nombre"
+        >
+
+    </div>
+
+    <button class="boton-filtrar">
+        🔎 Filtrar
+    </button>
+
+    <button class="boton-limpiar">
+        ↻ Limpiar
+    </button>
+
+    <div class="filtros-rapidos">
+
+        <button class="filtro-rapido activo">
+            Hoy
+        </button>
+
+        <button class="filtro-rapido">
+            Ultimos 7 dias
+        </button>
+
+        <button class="filtro-rapido">
+            Todo el historial
+        </button>
+
+    </div>
+
+</section>
+
+<section class="resultados-historial">
+
+    <div class="cabecera-resultados">
+
+        <span>Mostrando 0–0 de 0 ventas</span>
+
+        <select class="ventas-por-pagina">
+
+            <option>10 por pagina</option>
+            <option>20 por pagina</option>
+            <option>50 por pagina</option>
+
+        </select>
+
+    </div>
+
+
+    <div class="sin-ventas">
+
+        <div class="icono-sin-ventas">
+            🧾
+        </div>
+
+        <h2>No encontramos ventas</h2>
+
+        <p>
+            Ajusta los filtros o registra una nueva venta.
+        </p>
+
+    </div>
+
+</section>
+
+    </main>
+
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>
