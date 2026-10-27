@@ -1,0 +1,7 @@
+# Ignorar archivos compilados y temporales de C# / .NET
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+.vs/
+.vscode/
