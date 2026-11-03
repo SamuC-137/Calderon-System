@@ -9,6 +9,7 @@ namespace Backend.Models
         public decimal Precio { get; set; }
         public string UnidadMedida { get; set; } = "Unidad";
         public decimal Existencia { get; set; }
+        public string FechaCaducidad { get; set; } = string.Empty;
         public bool Activo { get; set; } = true;
     }
 }

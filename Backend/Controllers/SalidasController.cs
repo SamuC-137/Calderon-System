@@ -1,77 +1,62 @@
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Backend.Models;
+using Backend.Data;
 
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")] // Ruta: http://localhost:5148/api/salidas
+    [Route("api/[controller]")]
     public class SalidasController : ControllerBase
     {
-        private static readonly List<SalidaInventario> _salidas = new List<SalidaInventario>
+        private readonly ApplicationDbContext _context;
+
+        public SalidasController(ApplicationDbContext context)
         {
-            new SalidaInventario
-            {
-                Id = 1,
-                ProductoId = 5,
-                ProductoNombre = "Papel Higienico",
-                UnidadMedida = "Unidades",
-                Cantidad = 2,
-                MotivoCodigo = "consumo-personal",
-                MotivoTexto = "Consumo personal/familiar",
-                RetiradoPor = "—",
-                Fecha = "20/09/26 10:30"
-            },
-            new SalidaInventario
-            {
-                Id = 2,
-                ProductoId = 1,
-                ProductoNombre = "Arroz rio pelon",
-                UnidadMedida = "Libras",
-                Cantidad = 2,
-                MotivoCodigo = "uso-interno",
-                MotivoTexto = "Uso interno",
-                RetiradoPor = "Administracion",
-                Fecha = "19/09/26 18:20"
-            },
-            new SalidaInventario
-            {
-                Id = 3,
-                ProductoId = 6,
-                ProductoNombre = "Agua embotellada 1 Lt",
-                UnidadMedida = "Unidad",
-                Cantidad = 1,
-                MotivoCodigo = "consumo-personal",
-                MotivoTexto = "Consumo personal/familiar",
-                RetiradoPor = "—",
-                Fecha = "19/09/26 15:45"
-            }
-        };
+            _context = context;
+        }
 
         // 1. GET: api/salidas
-        // Devuelve el historial de salidas de inventario
+        // Consulta el historial de salidas desde SQL Server.
         [HttpGet]
-        public ActionResult<List<SalidaInventario>> ObtenerSalidas()
+        public async Task<IActionResult> ObtenerSalidas()
         {
-            return Ok(_salidas.OrderByDescending(s => s.Id).ToList());
+            var salidas = await _context.SalidasInventario
+                .AsNoTracking()
+                .OrderByDescending(s => s.Id)
+                .ToListAsync();
+
+            return Ok(salidas);
         }
 
         // 2. POST: api/salidas
-        // Registra una salida de inventario y RESTA la cantidad al stock del producto
+        // Registra una salida y descuenta las existencias.
         [HttpPost]
-        public ActionResult RegistrarSalida([FromBody] SalidaInventario nuevaSalida)
+        public async Task<IActionResult> RegistrarSalida(
+            [FromBody] SalidaInventario nuevaSalida)
         {
             if (nuevaSalida.Cantidad <= 0)
             {
-                return BadRequest(new { mensaje = "La cantidad a retirar debe ser mayor a 0." });
+                return BadRequest(new
+                {
+                    mensaje = "La cantidad a retirar debe ser mayor a 0."
+                });
             }
 
-            var producto = ProductosController.ListaProductos.FirstOrDefault(p => p.Id == nuevaSalida.ProductoId);
+            // Buscar el producto en SQL Server.
+            var producto = await _context.Productos
+                .FirstOrDefaultAsync(p => p.Id == nuevaSalida.ProductoId);
+
             if (producto == null)
             {
-                return NotFound(new { mensaje = "El producto seleccionado no existe en el inventario." });
+                return NotFound(new
+                {
+                    mensaje = "El producto seleccionado no existe en el inventario."
+                });
             }
 
-            // Validar que haya suficiente existencia antes de restar
+            // Comprobar que exista suficiente stock.
             if (producto.Existencia < nuevaSalida.Cantidad)
             {
                 return BadRequest(new
@@ -80,16 +65,25 @@ namespace Backend.Controllers
                 });
             }
 
-            // ¡LÓGICA CLAVE!: Restar la cantidad del stock del producto
+            // Descontar las existencias.
             producto.Existencia -= nuevaSalida.Cantidad;
 
-            nuevaSalida.Id = _salidas.Count > 0 ? _salidas.Max(s => s.Id) + 1 : 1;
+            // Completar los datos de la salida.
+            nuevaSalida.Id = 0;
             nuevaSalida.ProductoNombre = producto.Nombre;
             nuevaSalida.UnidadMedida = producto.UnidadMedida;
-            nuevaSalida.RetiradoPor = string.IsNullOrWhiteSpace(nuevaSalida.RetiradoPor) ? "—" : nuevaSalida.RetiradoPor.Trim();
+
+            nuevaSalida.RetiradoPor =
+                string.IsNullOrWhiteSpace(nuevaSalida.RetiradoPor)
+                ? "—"
+                : nuevaSalida.RetiradoPor.Trim();
+
             nuevaSalida.Fecha = DateTime.Now.ToString("dd/MM/yy HH:mm");
 
-            _salidas.Add(nuevaSalida);
+            // Guardar la salida y el nuevo stock.
+            _context.SalidasInventario.Add(nuevaSalida);
+
+            await _context.SaveChangesAsync();
 
             return Ok(new
             {

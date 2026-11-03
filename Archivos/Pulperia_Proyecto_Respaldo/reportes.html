@@ -45,8 +45,8 @@
     <main class="contenido-principal reportes-principal">
         <section class="encabezado-reportes">
             <div>
-                <div class="titulo-con-icono"><span class="icono-titulo">▥</span><h1>Estadísticas comerciales</h1></div>
-                <p>Consulta las ventas, los productos populares y el rendimiento de tu pulpería.</p>
+                <div class="titulo-con-icono"><span class="icono-titulo">▥</span><h1>Estadisticas comerciales</h1></div>
+                <p>Consulta las ventas, los productos populares, las perdidas y el rendimiento de tu pulperia.</p>
             </div>
             <button class="boton-imprimir" type="button">▣ Imprimir reporte</button>
         </section>
@@ -64,21 +64,25 @@
                 <button class="boton-filtrar" type="button">⌕ Consultar</button>
                 <button class="boton-limpiar" type="button">↻ Limpiar</button>
             </div>
-            <p class="mensaje-filtro" id="mensaje-filtro" aria-live="polite">Selecciona un período para consultar los reportes.</p>
+            <p class="mensaje-filtro" id="mensaje-filtro" aria-live="polite">Selecciona un periodo para consultar los reportes.</p>
         </section>
 
         <section class="reportes-resumen" aria-label="Resumen de ventas">
             <article class="reporte-tarjeta tarjeta-ventas">
                 <div class="tarjeta-reporte-icono">$</div>
-                <div><p class="reporte-etiqueta">Ventas totales</p><p class="reporte-valor">C$ 0.00</p><small>Dinero vendido en el período</small></div>
+                <div><p class="reporte-etiqueta">Ventas totales</p><p class="reporte-valor">C$ 0.00</p><small>Dinero vendido en el periodo</small></div>
             </article>
             <article class="reporte-tarjeta tarjeta-transacciones">
                 <div class="tarjeta-reporte-icono">▤</div>
-                <div><p class="reporte-etiqueta">Número de ventas</p><p class="reporte-valor">0</p><small>Transacciones realizadas</small></div>
+                <div><p class="reporte-etiqueta">Numero de ventas</p><p class="reporte-valor">0</p><small>Transacciones realizadas</small></div>
             </article>
             <article class="reporte-tarjeta tarjeta-ganancias">
                 <div class="tarjeta-reporte-icono">↗</div>
                 <div><p class="reporte-etiqueta">Ganancia estimada</p><p class="reporte-valor">C$ 0.00</p><small>Ventas menos costo de productos</small></div>
+            </article>
+            <article class="reporte-tarjeta tarjeta-perdidas">
+                <div class="tarjeta-reporte-icono">!</div>
+                <div><p class="reporte-etiqueta">Perdidas</p><p class="reporte-valor">C$ 88.00</p><small>Por productos vencidos o mermas</small></div>
             </article>
         </section>
 
@@ -86,14 +90,14 @@
             <article class="reportes-panel panel-productos">
                 <div class="reportes-panel-cabecera">
                     <div class="panel-icono azul">▥</div>
-                    <div><h2>Productos más vendidos</h2><p>Los productos con mayor cantidad de unidades vendidas.</p></div>
+                    <div><h2>Productos mas vendidos</h2><p>Los productos con mayor cantidad de unidades vendidas.</p></div>
                 </div>
-                <div class="grafico-vacio"><div class="grafico-vacio-icono">▥</div><strong>Sin datos para graficar</strong><span>Cuando existan ventas registradas, aquí podrás comparar los productos más vendidos.</span></div>
+                <div class="grafico-vacio"><div class="grafico-vacio-icono">▥</div><strong>Sin datos para graficar</strong><span>Cuando existan ventas registradas, aqui podras comparar los productos mas vendidos.</span></div>
             </article>
             <article class="reportes-panel panel-categorias">
                 <div class="reportes-panel-cabecera">
                     <div class="panel-icono verde">◔</div>
-                    <div><h2>Ventas por categoría</h2><p>Distribución de ingresos por categoría.</p></div>
+                    <div><h2>Ventas por categoria</h2><p>Distribucion de ingresos por categoria.</p></div>
                 </div>
                 <div class="grafico-circular-vacio"><div class="grafico-circular-centro"><strong>0%</strong><span>Registrado</span></div></div>
                 <p class="leyenda-vacia"><span></span> Sin datos disponibles</p>
@@ -109,7 +113,7 @@
                 <div class="reportes-tabla-contenedor">
                     <table class="reportes-tabla">
                         <thead><tr><th>Factura</th><th>Fecha</th><th>Monto total</th></tr></thead>
-                        <tbody><tr><td colspan="3" class="estado-sin-datos">Todavía no hay ventas registradas.</td></tr></tbody>
+                        <tbody><tr><td colspan="3" class="estado-sin-datos">Todavia no hay ventas registradas.</td></tr></tbody>
                     </table>
                 </div>
             </article>
@@ -121,10 +125,32 @@
                 <div class="reportes-tabla-contenedor">
                     <table class="reportes-tabla">
                         <thead><tr><th>Producto</th><th>Unidades</th><th>Ingresos</th></tr></thead>
-                        <tbody><tr><td colspan="3" class="estado-sin-datos">Todavía no hay datos para mostrar.</td></tr></tbody>
+                        <tbody><tr><td colspan="3" class="estado-sin-datos">Todavia no hay datos para mostrar.</td></tr></tbody>
                     </table>
                 </div>
             </article>
+        </section>
+
+        <section class="reportes-panel tabla-panel panel-perdidas" style="margin-top: 20px;">
+            <div class="reportes-panel-cabecera">
+                <div class="panel-icono rojo">!</div>
+                <div><h2>Perdidas por vencimiento y mermas</h2><p>Alimentos cuya fecha de caducidad ya vencio o productos dados de baja por vencimiento.</p></div>
+            </div>
+            <div class="reportes-tabla-contenedor">
+                <table class="reportes-tabla tabla-perdidas">
+                    <thead><tr><th>Producto</th><th>Categoria</th><th>Caducidad / Fecha</th><th>Motivo</th><th>Cantidad</th><th>Perdida total</th></tr></thead>
+                    <tbody id="tbody-reporte-perdidas">
+                        <tr>
+                            <td><strong>Yogurt Vasito Eskimos</strong></td>
+                            <td>Lacteos</td>
+                            <td>20/10/2026</td>
+                            <td><span class="caducidad-vencido">Vencido en inventario</span></td>
+                            <td>4 Unidad</td>
+                            <td style="color:#f87171; font-weight:bold;">- C$ 88.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
     </main>
 

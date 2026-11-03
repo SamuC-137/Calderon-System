@@ -1,177 +1,324 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Backend.Models;
+using Backend.Data;
 
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")] // Ruta: http://localhost:5148/api/ventas
+    [Route("api/[controller]")]
     public class VentasController : ControllerBase
     {
-        // Lista de ventas iniciales (en memoria hasta conectar SQL Server)
-        public static readonly List<Venta> ListaVentas = new List<Venta>
+        private readonly ApplicationDbContext _context;
+        private static bool _esquemaVerificado = false;
+
+        public VentasController(ApplicationDbContext context)
         {
-            new Venta
+            _context = context;
+        }
+
+        private async Task AsegurarColumnasVentasAsync()
+        {
+            if (_esquemaVerificado) return;
+            try
             {
-                Id = 1,
-                NumeroFactura = "01",
-                FechaIso = DateTime.Now.ToString("yyyy-MM-dd"),
-                FechaMostrar = DateTime.Now.AddHours(-3).ToString("dd/MM/yyyy HH:mm"),
-                Total = 150.00m,
-                Detalles = new List<DetalleVenta>
-                {
-                    new DetalleVenta { ProductoId = 1, ProductoNombre = "Arroz rio pelon", Categoria = "Abarrotes", UnidadMedida = "Libra", PrecioUnitario = 23.00m, Cantidad = 2, Subtotal = 46.00m },
-                    new DetalleVenta { ProductoId = 4, ProductoNombre = "Coca Cola retornable 2 Lt", Categoria = "Bebidas", UnidadMedida = "Unidad", PrecioUnitario = 48.00m, Cantidad = 1, Subtotal = 48.00m },
-                    new DetalleVenta { ProductoId = 2, ProductoNombre = "Azucar libreada", Categoria = "Abarrotes", UnidadMedida = "Libra", PrecioUnitario = 16.00m, Cantidad = 3.5m, Subtotal = 56.00m }
-                }
-            },
-            new Venta
-            {
-                Id = 2,
-                NumeroFactura = "02",
-                FechaIso = DateTime.Now.ToString("yyyy-MM-dd"),
-                FechaMostrar = DateTime.Now.AddHours(-2).ToString("dd/MM/yyyy HH:mm"),
-                Total = 80.00m,
-                Detalles = new List<DetalleVenta>
-                {
-                    new DetalleVenta { ProductoId = 2, ProductoNombre = "Azucar libreada", Categoria = "Abarrotes", UnidadMedida = "Libra", PrecioUnitario = 16.00m, Cantidad = 5, Subtotal = 80.00m }
-                }
-            },
-            new Venta
-            {
-                Id = 3,
-                NumeroFactura = "03",
-                FechaIso = DateTime.Now.ToString("yyyy-MM-dd"),
-                FechaMostrar = DateTime.Now.AddHours(-1).ToString("dd/MM/yyyy HH:mm"),
-                Total = 236.00m,
-                Detalles = new List<DetalleVenta>
-                {
-                    new DetalleVenta { ProductoId = 3, ProductoNombre = "Cafe presto 400 g", Categoria = "Abarrotes", UnidadMedida = "Unidad", PrecioUnitario = 200.00m, Cantidad = 1, Subtotal = 200.00m },
-                    new DetalleVenta { ProductoId = 5, ProductoNombre = "Papel Higienico", Categoria = "Aseo personal", UnidadMedida = "Unidad", PrecioUnitario = 18.00m, Cantidad = 2, Subtotal = 36.00m }
-                }
+                await _context.Database.ExecuteSqlRawAsync(@"
+                    IF COL_LENGTH('dbo.Ventas', 'MetodoPago') IS NULL
+                        ALTER TABLE dbo.Ventas ADD MetodoPago NVARCHAR(30) NOT NULL DEFAULT 'Efectivo';
+                    IF COL_LENGTH('dbo.Ventas', 'MontoRecibido') IS NULL
+                        ALTER TABLE dbo.Ventas ADD MontoRecibido DECIMAL(18,2) NOT NULL DEFAULT 0;
+                    IF COL_LENGTH('dbo.Ventas', 'Cambio') IS NULL
+                        ALTER TABLE dbo.Ventas ADD Cambio DECIMAL(18,2) NOT NULL DEFAULT 0;
+                ");
+                _esquemaVerificado = true;
             }
-        };
+            catch
+            {
+                // Ignorar si no requiere alteracion
+            }
+        }
 
         // 1. GET: api/ventas
-        // Consulta el historial de ventas con filtros por fecha, texto o filtro rápido (historial.html)
+        // Historial de ventas con filtros por fecha y busqueda avanzada (factura, fecha, producto, metodo de pago).
         [HttpGet]
-        public ActionResult<List<Venta>> ObtenerVentas(
+        public async Task<IActionResult> ObtenerVentas(
             [FromQuery] string? desde = null,
             [FromQuery] string? hasta = null,
             [FromQuery] string? buscar = null,
             [FromQuery] string? filtroRapido = null)
         {
-            IEnumerable<Venta> consulta = ListaVentas;
+            await AsegurarColumnasVentasAsync();
 
-            // Filtro rápido: "hoy" o "7dias"
+            var consulta = _context.Ventas
+                .AsNoTracking()
+                .Include(v => v.Detalles)
+                .AsQueryable();
+
+            // Filtro rapido: hoy o ultimos 7 dias.
             if (!string.IsNullOrWhiteSpace(filtroRapido))
             {
                 var hoyIso = DateTime.Now.ToString("yyyy-MM-dd");
-                if (filtroRapido == "hoy")
+
+                if (filtroRapido.Equals("hoy", StringComparison.OrdinalIgnoreCase))
                 {
                     consulta = consulta.Where(v => v.FechaIso == hoyIso);
                 }
-                else if (filtroRapido == "7dias")
+                else if (filtroRapido.Equals("7dias", StringComparison.OrdinalIgnoreCase))
                 {
                     var hace7DiasIso = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd");
-                    consulta = consulta.Where(v => string.Compare(v.FechaIso, hace7DiasIso) >= 0);
+
+                    consulta = consulta.Where(v =>
+                        string.Compare(v.FechaIso, hace7DiasIso) >= 0);
                 }
             }
 
-            // Filtro por rango de fechas (Desde / Hasta)
+            // Filtro por rango de fechas.
             if (!string.IsNullOrWhiteSpace(desde))
             {
-                consulta = consulta.Where(v => string.Compare(v.FechaIso, desde) >= 0);
+                consulta = consulta.Where(v =>
+                    string.Compare(v.FechaIso, desde) >= 0);
             }
+
             if (!string.IsNullOrWhiteSpace(hasta))
             {
-                consulta = consulta.Where(v => string.Compare(v.FechaIso, hasta) <= 0);
+                consulta = consulta.Where(v =>
+                    string.Compare(v.FechaIso, hasta) <= 0);
             }
 
-            // Filtro por número de factura o nombre de producto
+            // Busqueda avanzada por numero de factura, fecha, metodo de pago o nombre del producto.
             if (!string.IsNullOrWhiteSpace(buscar))
             {
-                var termino = buscar.Trim().ToLower();
+                var termino = buscar.Trim().TrimStart('#');
+
                 consulta = consulta.Where(v =>
-                    v.NumeroFactura.ToLower().Contains(termino) ||
-                    v.Detalles.Any(d => d.ProductoNombre.ToLower().Contains(termino)));
+                    v.NumeroFactura.Contains(termino) ||
+                    v.FechaMostrar.Contains(termino) ||
+                    v.FechaIso.Contains(termino) ||
+                    v.MetodoPago.Contains(termino) ||
+                    v.Detalles.Any(d => d.ProductoNombre.Contains(termino)));
             }
 
-            return Ok(consulta.OrderByDescending(v => v.Id).ToList());
+            var ventas = await consulta
+                .OrderByDescending(v => v.Id)
+                .ToListAsync();
+
+            return Ok(ventas);
         }
 
         // 2. POST: api/ventas
-        // Registra una nueva venta desde NVenta.html y DESCUENTA el stock de cada producto vendido
+        // Registra una venta, metodo de pago, cambio y descuenta las existencias.
         [HttpPost]
-        public ActionResult RegistrarVenta([FromBody] Venta nuevaVenta)
+        public async Task<IActionResult> RegistrarVenta([FromBody] Venta nuevaVenta)
         {
+            await AsegurarColumnasVentasAsync();
+
             if (nuevaVenta.Detalles == null || nuevaVenta.Detalles.Count == 0)
             {
-                return BadRequest(new { mensaje = "El carrito está vacío. Agrega al menos un producto." });
+                return BadRequest(new
+                {
+                    mensaje = "El carrito esta vacio. Agrega al menos un producto."
+                });
             }
 
-            // Paso 1: Verificar que exista stock suficiente para TODOS los productos del carrito
-            foreach (var item in nuevaVenta.Detalles)
+            // Validar cantidades.
+            if (nuevaVenta.Detalles.Any(d => d.ProductoId <= 0 || d.Cantidad <= 0))
             {
-                var prod = ProductosController.ListaProductos.FirstOrDefault(p => p.Id == item.ProductoId);
-                if (prod == null)
+                return BadRequest(new
                 {
-                    return NotFound(new { mensaje = $"El producto con ID {item.ProductoId} no existe." });
+                    mensaje = "Los productos deben tener un ID valido y una cantidad mayor a 0."
+                });
+            }
+
+            // Agrupar productos repetidos para validar el stock total necesario.
+            var cantidadesPorProducto = nuevaVenta.Detalles
+                .GroupBy(d => d.ProductoId)
+                .ToDictionary(
+                    grupo => grupo.Key,
+                    grupo => grupo.Sum(d => d.Cantidad)
+                );
+
+            await using var transaccion =
+                await _context.Database.BeginTransactionAsync();
+
+            var idsProductos = cantidadesPorProducto.Keys.ToList();
+
+            var productos = await _context.Productos
+                .Where(p => idsProductos.Contains(p.Id))
+                .ToListAsync();
+
+            var productosPorId = productos.ToDictionary(p => p.Id);
+
+            // Comprobar que existan todos los productos y que tengan stock.
+            foreach (var cantidad in cantidadesPorProducto)
+            {
+                if (!productosPorId.TryGetValue(cantidad.Key, out var producto))
+                {
+                    return NotFound(new
+                    {
+                        mensaje = $"El producto con ID {cantidad.Key} no existe."
+                    });
                 }
-                if (prod.Existencia < item.Cantidad)
+
+                if (producto.Existencia < cantidad.Value)
                 {
                     return BadRequest(new
                     {
-                        mensaje = $"Stock insuficiente para '{prod.Nombre}'. Disponible: {prod.Existencia} {prod.UnidadMedida}."
+                        mensaje = $"Stock insuficiente para '{producto.Nombre}'. " +
+                                  $"Disponible: {producto.Existencia} {producto.UnidadMedida}."
                     });
                 }
             }
 
-            // Paso 2: Descontar existencias y calcular subtotales reales en C#
+            // Descontar existencias y calcular los detalles de la venta.
             decimal totalCalculado = 0;
+
+            foreach (var cantidad in cantidadesPorProducto)
+            {
+                productosPorId[cantidad.Key].Existencia -= cantidad.Value;
+            }
+
             foreach (var item in nuevaVenta.Detalles)
             {
-                var prod = ProductosController.ListaProductos.First(p => p.Id == item.ProductoId);
-                prod.Existencia -= item.Cantidad;
+                var producto = productosPorId[item.ProductoId];
 
-                item.ProductoNombre = prod.Nombre;
-                item.Categoria = prod.Categoria;
-                item.UnidadMedida = prod.UnidadMedida;
-                item.PrecioUnitario = prod.Precio;
-                item.Subtotal = Math.Round(prod.Precio * item.Cantidad, 2);
+                item.Id = 0;
+                item.VentaId = 0;
+                item.ProductoNombre = producto.Nombre;
+                item.Categoria = producto.Categoria;
+                item.UnidadMedida = producto.UnidadMedida;
+                item.PrecioUnitario = producto.Precio;
+                item.Subtotal = Math.Round(
+                    producto.Precio * item.Cantidad, 2);
 
                 totalCalculado += item.Subtotal;
             }
 
-            int nuevoId = ListaVentas.Count > 0 ? ListaVentas.Max(v => v.Id) + 1 : 1;
-            nuevaVenta.Id = nuevoId;
-            nuevaVenta.NumeroFactura = nuevoId.ToString("D2"); // Ej: "04", "05"...
+            string metodoPago = string.IsNullOrWhiteSpace(nuevaVenta.MetodoPago)
+                ? "Efectivo"
+                : nuevaVenta.MetodoPago.Trim();
+
+            decimal montoRecibido = nuevaVenta.MontoRecibido > 0
+                ? nuevaVenta.MontoRecibido
+                : totalCalculado;
+
+            if (metodoPago.Equals("Efectivo", StringComparison.OrdinalIgnoreCase) && montoRecibido < totalCalculado)
+            {
+                return BadRequest(new
+                {
+                    mensaje = $"El monto recibido (C$ {montoRecibido:F2}) no puede ser menor al total a pagar (C$ {totalCalculado:F2})."
+                });
+            }
+
+            decimal cambioCalculado = metodoPago.Equals("Efectivo", StringComparison.OrdinalIgnoreCase)
+                ? Math.Max(0, Math.Round(montoRecibido - totalCalculado, 2))
+                : 0;
+
+            // Preparar los datos de la venta.
+            nuevaVenta.Id = 0;
+            nuevaVenta.NumeroFactura = "";
             nuevaVenta.FechaIso = DateTime.Now.ToString("yyyy-MM-dd");
             nuevaVenta.FechaMostrar = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            nuevaVenta.MetodoPago = metodoPago;
+            nuevaVenta.MontoRecibido = Math.Round(montoRecibido, 2);
+            nuevaVenta.Cambio = cambioCalculado;
             nuevaVenta.Total = totalCalculado;
 
-            ListaVentas.Add(nuevaVenta);
+            // Guardar para obtener el ID generado por SQL Server.
+            _context.Ventas.Add(nuevaVenta);
+            await _context.SaveChangesAsync();
+
+            // Usar el ID como numero de factura.
+            nuevaVenta.NumeroFactura = nuevaVenta.Id.ToString("D2");
+
+            await _context.SaveChangesAsync();
+            await transaccion.CommitAsync();
 
             return Ok(new
             {
-                mensaje = $"¡Venta #{nuevaVenta.NumeroFactura} registrada con éxito! Total: C$ {nuevaVenta.Total:F2}",
+                mensaje = $"Venta #{nuevaVenta.NumeroFactura} registrada con exito. " +
+                          $"Total: C$ {nuevaVenta.Total:F2}",
                 venta = nuevaVenta
             });
         }
 
-        // 3. GET: api/ventas/dashboard
-        // Calcula el resumen para la página de Inicio (index.html)
-        [HttpGet("dashboard")]
-        public ActionResult ObtenerResumenDashboard()
+        // 3. DELETE: api/ventas/{id}
+        // Cancela/anula una venta y devuelve automaticamente las existencias al inventario.
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> CancelarVenta(int id)
         {
+            await AsegurarColumnasVentasAsync();
+
+            await using var transaccion =
+                await _context.Database.BeginTransactionAsync();
+
+            var venta = await _context.Ventas
+                .Include(v => v.Detalles)
+                .FirstOrDefaultAsync(v => v.Id == id);
+
+            if (venta == null)
+            {
+                return NotFound(new
+                {
+                    mensaje = "No se encontro la venta que deseas cancelar."
+                });
+            }
+
+            // Devolver existencias de cada producto al inventario
+            var idsProductos = venta.Detalles.Select(d => d.ProductoId).Distinct().ToList();
+            var productos = await _context.Productos
+                .Where(p => idsProductos.Contains(p.Id))
+                .ToListAsync();
+            var productosPorId = productos.ToDictionary(p => p.Id);
+
+            foreach (var detalle in venta.Detalles)
+            {
+                if (productosPorId.TryGetValue(detalle.ProductoId, out var producto))
+                {
+                    producto.Existencia += detalle.Cantidad;
+                }
+            }
+
+            string numFactura = venta.NumeroFactura;
+
+            _context.DetallesVenta.RemoveRange(venta.Detalles);
+            _context.Ventas.Remove(venta);
+
+            await _context.SaveChangesAsync();
+            await transaccion.CommitAsync();
+
+            return Ok(new
+            {
+                mensaje = $"Venta #{numFactura} cancelada correctamente. Las existencias fueron devueltas al inventario."
+            });
+        }
+
+        // 4. GET: api/ventas/dashboard
+        // Resumen para la pagina de Inicio.
+        [HttpGet("dashboard")]
+        public async Task<IActionResult> ObtenerResumenDashboard()
+        {
+            await AsegurarColumnasVentasAsync();
+
             var hoyIso = DateTime.Now.ToString("yyyy-MM-dd");
-            decimal ventasDelDia = ListaVentas
+
+            var ventas = await _context.Ventas
+                .AsNoTracking()
+                .Include(v => v.Detalles)
+                .ToListAsync();
+
+            var productos = await _context.Productos
+                .AsNoTracking()
+                .Where(p => p.Activo)
+                .ToListAsync();
+
+            decimal ventasDelDia = ventas
                 .Where(v => v.FechaIso == hoyIso)
                 .Sum(v => v.Total);
 
-            int totalProductos = ProductosController.ListaProductos.Count(p => p.Activo);
-            int stockBajo = ProductosController.ListaProductos.Count(p => p.Activo && p.Existencia <= 10);
+            int totalProductos = productos.Count;
+            int stockBajo = productos.Count(p => p.Existencia <= 10);
 
-            var ventasRecientes = ListaVentas
+            var ventasRecientes = ventas
                 .OrderByDescending(v => v.Id)
                 .Take(5)
                 .Select(v => new
@@ -182,7 +329,7 @@ namespace Backend.Controllers
                 })
                 .ToList();
 
-            var masVendidos = ListaVentas
+            var masVendidos = ventas
                 .SelectMany(v => v.Detalles)
                 .GroupBy(d => d.ProductoNombre)
                 .Select(g => new
@@ -204,26 +351,40 @@ namespace Backend.Controllers
             });
         }
 
-        // 4. GET: api/ventas/reportes
-        // Calcula todas las estadísticas comerciales para reportes.html
+        // 5. GET: api/ventas/reportes
+        // Estadisticas comerciales para reportes.html (incluyendo Perdidas por vencimiento/mermas).
         [HttpGet("reportes")]
-        public ActionResult ObtenerReportes([FromQuery] string? desde = null, [FromQuery] string? hasta = null)
+        public async Task<IActionResult> ObtenerReportes(
+            [FromQuery] string? desde = null,
+            [FromQuery] string? hasta = null)
         {
-            IEnumerable<Venta> ventasFiltradas = ListaVentas;
+            await AsegurarColumnasVentasAsync();
+            await ProductosController.SincronizarEsquemaYProductosAsync(_context);
+
+            var consulta = _context.Ventas
+                .AsNoTracking()
+                .Include(v => v.Detalles)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(desde))
             {
-                ventasFiltradas = ventasFiltradas.Where(v => string.Compare(v.FechaIso, desde) >= 0);
-            }
-            if (!string.IsNullOrWhiteSpace(hasta))
-            {
-                ventasFiltradas = ventasFiltradas.Where(v => string.Compare(v.FechaIso, hasta) <= 0);
+                consulta = consulta.Where(v =>
+                    string.Compare(v.FechaIso, desde) >= 0);
             }
 
-            var lista = ventasFiltradas.ToList();
+            if (!string.IsNullOrWhiteSpace(hasta))
+            {
+                consulta = consulta.Where(v =>
+                    string.Compare(v.FechaIso, hasta) <= 0);
+            }
+
+            var lista = await consulta.ToListAsync();
+
             decimal ventasTotales = lista.Sum(v => v.Total);
             int numeroVentas = lista.Count;
-            decimal gananciaEstimada = Math.Round(ventasTotales * 0.25m, 2); // Margen estimado del 25%
+
+            decimal gananciaEstimada =
+                Math.Round(ventasTotales * 0.25m, 2);
 
             var rendimientoProductos = lista
                 .SelectMany(v => v.Detalles)
@@ -239,12 +400,18 @@ namespace Backend.Controllers
 
             var ventasPorCategoria = lista
                 .SelectMany(v => v.Detalles)
-                .GroupBy(d => string.IsNullOrWhiteSpace(d.Categoria) ? "Otros" : d.Categoria)
+                .GroupBy(d =>
+                    string.IsNullOrWhiteSpace(d.Categoria)
+                        ? "Otros"
+                        : d.Categoria)
                 .Select(g => new
                 {
                     categoria = g.Key,
                     ingresos = g.Sum(x => x.Subtotal),
-                    porcentaje = ventasTotales > 0 ? Math.Round((g.Sum(x => x.Subtotal) / ventasTotales) * 100, 1) : 0
+                    porcentaje = ventasTotales > 0
+                        ? Math.Round(
+                            (g.Sum(x => x.Subtotal) / ventasTotales) * 100, 1)
+                        : 0
                 })
                 .OrderByDescending(x => x.ingresos)
                 .ToList();
@@ -260,11 +427,99 @@ namespace Backend.Controllers
                 })
                 .ToList();
 
+            // Calculo de Perdidas por productos vencidos en inventario y salidas por vencimiento/merma
+            var hoyIso = DateTime.Now.ToString("yyyy-MM-dd");
+            var todosLosProductos = await _context.Productos
+                .AsNoTracking()
+                .ToListAsync();
+
+            var salidasRegistradas = await _context.SalidasInventario
+                .AsNoTracking()
+                .ToListAsync();
+
+            var detallePerdidas = new List<object>();
+            decimal perdidasTotales = 0;
+
+            foreach (var prod in todosLosProductos)
+            {
+                if (prod.Existencia <= 0) continue;
+                if (string.IsNullOrWhiteSpace(prod.FechaCaducidad) ||
+                    prod.FechaCaducidad.Equals("No aplica", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (string.Compare(prod.FechaCaducidad, hoyIso) < 0)
+                {
+                    if (!string.IsNullOrWhiteSpace(desde) && string.Compare(prod.FechaCaducidad, desde) < 0)
+                        continue;
+                    if (!string.IsNullOrWhiteSpace(hasta) && string.Compare(prod.FechaCaducidad, hasta) > 0)
+                        continue;
+
+                    decimal monto = Math.Round(prod.Existencia * prod.Precio, 2);
+                    perdidasTotales += monto;
+
+                    string fechaFormateada = prod.FechaCaducidad;
+                    var partes = prod.FechaCaducidad.Split('-');
+                    if (partes.Length == 3)
+                    {
+                        fechaFormateada = $"{partes[2]}/{partes[1]}/{partes[0]}";
+                    }
+
+                    detallePerdidas.Add(new
+                    {
+                        producto = prod.Nombre,
+                        categoria = prod.Categoria,
+                        fechaCaducidad = fechaFormateada,
+                        motivo = "Vencido en inventario",
+                        cantidad = $"{prod.Existencia} {prod.UnidadMedida}",
+                        precioUnitario = prod.Precio,
+                        montoPerdida = monto
+                    });
+                }
+            }
+
+            var productosDict = todosLosProductos.ToDictionary(p => p.Id);
+            foreach (var salida in salidasRegistradas)
+            {
+                bool esPerdida =
+                    salida.MotivoCodigo.Equals("vencimiento", StringComparison.OrdinalIgnoreCase) ||
+                    salida.MotivoCodigo.Equals("merma", StringComparison.OrdinalIgnoreCase) ||
+                    salida.MotivoTexto.Contains("vencid", StringComparison.OrdinalIgnoreCase) ||
+                    salida.MotivoTexto.Contains("merma", StringComparison.OrdinalIgnoreCase);
+
+                if (!esPerdida) continue;
+
+                decimal precioUnit = productosDict.TryGetValue(salida.ProductoId, out var prodRef)
+                    ? prodRef.Precio
+                    : 0;
+                string categoriaRef = productosDict.TryGetValue(salida.ProductoId, out var prodCat)
+                    ? prodCat.Categoria
+                    : "Inventario";
+
+                decimal monto = Math.Round(salida.Cantidad * precioUnit, 2);
+                perdidasTotales += monto;
+
+                detallePerdidas.Add(new
+                {
+                    producto = salida.ProductoNombre,
+                    categoria = categoriaRef,
+                    fechaCaducidad = salida.Fecha,
+                    motivo = string.IsNullOrWhiteSpace(salida.MotivoTexto) ? "Retiro por vencimiento / merma" : salida.MotivoTexto,
+                    cantidad = $"{salida.Cantidad} {salida.UnidadMedida}",
+                    precioUnitario = precioUnit,
+                    montoPerdida = monto
+                });
+            }
+
             return Ok(new
             {
                 ventasTotales,
                 numeroVentas,
                 gananciaEstimada,
+                perdidasTotales,
+                productosVencidosCount = detallePerdidas.Count,
+                detallePerdidas,
                 rendimientoProductos,
                 ventasPorCategoria,
                 ventasMayorValor

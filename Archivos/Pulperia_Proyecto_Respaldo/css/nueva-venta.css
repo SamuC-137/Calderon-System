@@ -52,7 +52,18 @@ body {
     color: #ef4444;
     background: #fff;
     padding: 18px;
-    border-radius: 12px;   
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-vaciar:hover {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.4);
 }
 
 .btn-registrar {
@@ -60,7 +71,17 @@ body {
     color: #fff;
     background: #16865a;
     opacity: .65;
-        border-radius: 12px;  
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-registrar:hover {
+    background: #157347;
+    opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.4);
 }
 
 .venta-distribucion {
@@ -126,6 +147,12 @@ body {
     height: 42px;
     padding: 0 12px;
     color: #94a3b8;
+    cursor: text;
+    transition: 0.2s;
+}
+
+.busqueda-productos:hover {
+    border-color: #38bdf8;
 }
 
 .busqueda-productos span {
@@ -163,12 +190,25 @@ body {
     color: #f1f5f9;
     background: #1e293b;
     font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.categoria:hover {
+    background: #475569;
+    border-color: #38bdf8;
+    transform: translateY(-1px);
 }
 
 .categoria.activa {
     background: #0ea5e9;
     color: #fff;
     border-color: #0ea5e9;
+}
+
+.categoria.activa:hover {
+    background: #0284c7;
+    border-color: #0284c7;
 }
 
 .productos-grid {
@@ -185,11 +225,23 @@ body {
     box-shadow: 0 2px 4px rgba(15,23,42,.25);
     background: #1e293b;
     color: #f1f5f9;
+    transition: 0.2s;
+}
+
+.producto-card:hover {
+    transform: translateY(-2px);
+    border-color: #38bdf8;
+    box-shadow: 0 4px 12px rgba(15,23,42,.4);
 }
 
 .producto-card.destacado {
     border-color: #38bdf8;
     background: linear-gradient(145deg,#1e293b,#334155);
+}
+
+.producto-card.destacado:hover {
+    border-color: #0ea5e9;
+    box-shadow: 0 4px 12px rgba(14,165,233,.3);
 }
 
 .producto-superior {
@@ -216,15 +268,54 @@ body {
     font-weight: 700;
 }
 
+.producto-etiquetas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+}
+
 .producto-tipo {
     display: inline-block;
-    margin-top: 10px;
     padding: 4px 7px;
     border-radius: 12px;
     background: #38bdf8;
     color: #0f172a;
     font-size: 10px;
     font-weight: 700;
+}
+
+.caducidad-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.caducidad-badge.vigente {
+    background: rgba(22, 134, 90, 0.3);
+    border: 1px solid #16869a;
+    color: #4ade80;
+}
+
+.caducidad-badge.por-vencer {
+    background: rgba(245, 158, 11, 0.25);
+    border: 1px solid #f59e0b;
+    color: #fbbf24;
+}
+
+.caducidad-badge.vencido {
+    background: rgba(220, 38, 38, 0.3);
+    border: 1px solid #f87171;
+    color: #f87171;
+}
+
+.caducidad-badge.no-aplica {
+    background: #334155;
+    border: 1px solid #475569;
+    color: #cbd5e1;
 }
 
 .producto-card p {
@@ -258,6 +349,13 @@ body {
     font-size: 11px;
     font-weight: 700;
     white-space: nowrap;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.producto-pie button:hover {
+    background: #0284c7;
+    transform: translateY(-1px);
 }
 
 .nota-catalogo {
@@ -306,7 +404,7 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 48px 18px 42px;
+    padding: 32px 18px 28px;
     color: #94a3b8;
 }
 
@@ -324,7 +422,8 @@ body {
 
 .carrito-vacio p {
     max-width: 235px;
-    margin: 0;
+    margin: 0 auto;
+    text-align: center;
     font-size: 12px;
     line-height: 1.6;
 }
@@ -332,10 +431,120 @@ body {
 .detalle-nota {
     border-top: 1px solid #475569;
     border-bottom: 1px solid #475569;
-    padding: 16px 2px;
+    padding: 12px 2px;
     color: #94a3b8;
     font-size: 11px;
-    min-height: 90px;
+    min-height: 44px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pago-panel {
+    margin-top: auto;
+    padding: 12px;
+    background: #1e293b;
+    border: 1px solid #475569;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pago-etiqueta {
+    font-size: 12px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+.metodos-pago {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.btn-metodo {
+    height: 36px;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    background: #0f172a;
+    color: #f1f5f9;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-metodo:hover {
+    border-color: #38bdf8;
+    background: #334155;
+}
+
+.btn-metodo.activo {
+    background: #0ea5e9;
+    border-color: #0ea5e9;
+    color: #fff;
+}
+
+.calculo-cambio {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 6px;
+    border-top: 1px solid #334155;
+}
+
+.campo-recibido {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.campo-recibido label {
+    font-size: 12px;
+    color: #cbd5e1;
+    font-weight: 600;
+}
+
+.campo-recibido input {
+    width: 130px;
+    height: 34px;
+    padding: 0 10px;
+    border: 1px solid #475569;
+    border-radius: 7px;
+    background: #0f172a;
+    color: #f1f5f9;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: right;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.campo-recibido input:hover,
+.campo-recibido input:focus {
+    outline: none;
+    border-color: #38bdf8;
+}
+
+.fila-cambio {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.fila-cambio span {
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.fila-cambio strong {
+    color: #4ade80;
+    font-size: 15px;
 }
 
 .total-venta {
@@ -343,8 +552,7 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-top: auto;
-    padding: 20px 0 16px;
+    padding: 16px 0 14px;
 }
 
 .total-venta span {
@@ -362,4 +570,21 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
+}
+
+.btn-menos,
+.btn-mas,
+.btn-quitar {
+    transition: 0.2s;
+}
+
+.btn-menos:hover,
+.btn-mas:hover {
+    background: #0ea5e9 !important;
+    border-color: #0ea5e9 !important;
+}
+
+.btn-quitar:hover {
+    color: #f87171 !important;
+    transform: scale(1.15);
 }

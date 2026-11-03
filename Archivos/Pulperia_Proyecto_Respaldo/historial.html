@@ -52,12 +52,12 @@
 
                 <h1>Historial de Ventas</h1>
 
-                <p>Consulta y localiza cada transaccion.</p>
+                <p>Consulta, imprime comprobantes o anula transacciones.</p>
 
             </div>
 
-            <a href="#" class="boton-nueva-venta">
-                ➕ Nueva venta
+            <a href="NVenta.html" class="boton-nueva-venta">
+                + Nueva venta
             </a>
 
         </section>
@@ -82,22 +82,22 @@
 
     <div class="campo-filtro campo-busqueda">
 
-        <label for="busqueda">Factura o producto</label>
+        <label for="busqueda">Busqueda avanzada (factura, fecha o producto)</label>
 
         <input
             type="text"
             id="busqueda"
-            placeholder="# venta o nombre"
+            placeholder="Ej. #01, 20/09/2026, Arroz o Efectivo"
         >
 
     </div>
 
     <button class="boton-filtrar">
-        🔎 Filtrar
+        Filtrar
     </button>
 
     <button class="boton-limpiar">
-        ↻ Limpiar
+        Limpiar
     </button>
 
     <div class="filtros-rapidos">
@@ -122,13 +122,13 @@
 
     <div class="cabecera-resultados">
 
-        <span>Mostrando 0–0 de 0 ventas</span>
+        <span>Mostrando 0-0 de 0 ventas</span>
 
         <select class="ventas-por-pagina">
 
-            <option>10 por pagina</option>
-            <option>20 por pagina</option>
-            <option>50 por pagina</option>
+            <option value="10">10 por pagina</option>
+            <option value="20">20 por pagina</option>
+            <option value="50">50 por pagina</option>
 
         </select>
 

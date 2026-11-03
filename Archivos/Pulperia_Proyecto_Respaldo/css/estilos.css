@@ -410,6 +410,26 @@ td {
     font-size: 14px;
 }
 
+#tabla-dinamica-historial tbody tr:hover {
+    background-color: #0f172a;
+}
+
+.btn-ver-comprobante,
+.btn-cancelar-venta {
+    transition: 0.2s;
+}
+
+.btn-ver-comprobante:hover {
+    background-color: #0ea5e9 !important;
+    border-color: #0ea5e9 !important;
+    color: #ffffff !important;
+}
+
+.btn-cancelar-venta:hover {
+    background-color: #dc2626 !important;
+    border-color: #f87171 !important;
+}
+
 /* recargas.html */
 .cuadro-Claro-Tigo {
     display: grid;
@@ -1269,6 +1289,32 @@ td {
 
 }
 
+
+.boton-eliminar {
+
+    border: 1px solid #dc2626;
+
+    color: #ffffff;
+
+    background-color: #991b1b !important;
+
+    margin-left: 4px;
+
+    transition: 0.2s;
+
+}
+
+
+.boton-eliminar:hover {
+
+    background-color: #dc2626 !important;
+
+    border-color: #f87171;
+
+    color: #ffffff;
+
+}
+
 .stock-normal {
 
     background-color: #0ea5e9;
@@ -1276,6 +1322,96 @@ td {
     color: #ffffff !important;
 
     padding: 4px 7px;
+
+    border-radius: 4px;
+
+    font-size: 11px !important;
+
+    font-weight: bold;
+
+}
+
+.stock-bajo-alerta {
+
+    background-color: #b45309;
+
+    border: 1px solid #f59e0b;
+
+    color: #ffffff !important;
+
+    padding: 4px 7px;
+
+    border-radius: 4px;
+
+    font-size: 11px !important;
+
+    font-weight: bold;
+
+}
+
+.caducidad-vigente {
+
+    background-color: rgba(22, 134, 90, 0.3);
+
+    border: 1px solid #16869a;
+
+    color: #4ade80 !important;
+
+    padding: 4px 8px;
+
+    border-radius: 4px;
+
+    font-size: 11px !important;
+
+    font-weight: bold;
+
+}
+
+.caducidad-por-vencer {
+
+    background-color: rgba(245, 158, 11, 0.25);
+
+    border: 1px solid #f59e0b;
+
+    color: #fbbf24 !important;
+
+    padding: 4px 8px;
+
+    border-radius: 4px;
+
+    font-size: 11px !important;
+
+    font-weight: bold;
+
+}
+
+.caducidad-vencido {
+
+    background-color: rgba(220, 38, 38, 0.3);
+
+    border: 1px solid #f87171;
+
+    color: #f87171 !important;
+
+    padding: 4px 8px;
+
+    border-radius: 4px;
+
+    font-size: 11px !important;
+
+    font-weight: bold;
+
+}
+
+.caducidad-no-aplica {
+
+    background-color: #334155;
+
+    border: 1px solid #475569;
+
+    color: #cbd5e1 !important;
+
+    padding: 4px 8px;
 
     border-radius: 4px;
 
@@ -1827,3 +1963,33 @@ td {
 
 
 
+/* Reportes: Tarjeta y panel de Perdidas por vencimiento */
+.reportes-resumen {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.tarjeta-perdidas .tarjeta-reporte-icono {
+    color: #f87171;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid #ef4444;
+}
+
+.tarjeta-perdidas .reporte-valor {
+    color: #f87171;
+}
+
+.panel-icono.rojo {
+    color: #f87171;
+}
+
+@media (max-width: 1100px) {
+    .reportes-resumen {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .reportes-resumen {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

@@ -19,6 +19,9 @@ namespace Backend.Models
         public string NumeroFactura { get; set; } = string.Empty;
         public string FechaIso { get; set; } = string.Empty;     // Formato yyyy-MM-dd para filtros de fecha
         public string FechaMostrar { get; set; } = string.Empty; // Formato dd/MM/yyyy HH:mm para tablas
+        public string MetodoPago { get; set; } = "Efectivo";     // Efectivo o Transferencia
+        public decimal MontoRecibido { get; set; }
+        public decimal Cambio { get; set; }
         public decimal Total { get; set; }
         public List<DetalleVenta> Detalles { get; set; } = new List<DetalleVenta>();
     }
